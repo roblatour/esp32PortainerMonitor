@@ -4,10 +4,11 @@
 
  ![photo](https://github.com/user-attachments/assets/4be64526-5373-453e-8021-079206fb6a89)
 
- - automatically sorts containers by their status and name
- - as needed touch the display to scroll up, down, left or right
+ - automatically sorts and displays containers by their status and name
+ - as needed you can touch the display to scroll up, down, left or right
+ - user defined refresh rate
    
-## Code is open source and provides an example of how to:
+## the open source code provides an example of how to:
  - access Portiainer info via the Portainer API
  - write to a virtual window which is scrollable on a touch TFT display
 
@@ -19,5 +20,5 @@
  To help support Push2Run, or to just say thanks, you're welcome to 'buy me a coffee'<br><br>
 [<img alt="buy me  a coffee" width="200px" src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" />](https://www.buymeacoffee.com/roblatour)
 * * *
-Copyright © 2018 - 2024 Rob Latour
+Copyright © 2024 Rob Latour
 * * *
