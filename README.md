@@ -13,7 +13,7 @@
  - write to a virtual window which is scrollable on a touch TFT display
 
 ## Hardware
-- designed for and tested on this ![ESP32 touch display](https://www.aliexpress.com/item/1005004502250619.html)
+- designed for and tested on this [ESP32 touch display](https://www.aliexpress.com/item/1005004502250619.html)
 
 ## ESP32 Portainer Monitor
 
