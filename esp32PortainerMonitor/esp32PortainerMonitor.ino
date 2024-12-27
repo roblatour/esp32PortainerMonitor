@@ -21,9 +21,9 @@
 // Events Run On:                         "Core 1"
 // Flash Frequency                        "80MHz"
 // Flash Mode:                            "QI0"
-// Flash Size                             "4MB (32Mb)"               
+// Flash Size                             "4MB (32Mb)"
 // JTAG Adapter                           "Disabled"
-// Arudino Runs On                        "Core 1"
+// Arduino Runs On                        "Core 1"
 // USB Firmware MSCOn Boot:               "Disabled"
 // Partition Scheme:                      "Default 4BB with spiffs (1.285MB APP/1.5MB SPIFFS)"
 // PSRAM:                                 "Disabled"
@@ -37,16 +37,17 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 
-#include <TFT_eSPI.h>              // download from: http://pan.jczn1688.com/directlink/1/ESP32%20module/2.8inch_ESP32-2432S028R.rar
+#include <TFT_eSPI.h>  // download from: http://pan.jczn1688.com/directlink/1/ESP32%20module/2.8inch_ESP32-2432S028R.rar
 
-#include "pin_config.h"         
+#include "pin_config.h"
 #include "virtual_window.h"
 
-#include <bb_spi_lcd.h>            // download from: https://github.com/bitbank2/bb_spi_lcd
+#include <bb_spi_lcd.h>  // download from: https://github.com/bitbank2/bb_spi_lcd
 BB_SPI_LCD touchPanel;
 
 #include "user_secrets.h"
 #include "user_settings.h"
+//#include "helperClasses.h"
 
 const char* WiFi_SSID = SECRET_WIFI_SSID;
 const char* WiFi_Password = SECRET_WIFI_PASSWORD;
@@ -58,10 +59,11 @@ const char* portainerAccessToken = SECRET_PORTAINER_ACCESS_TOKEN;
 
 String endpointID = "";
 
-const int16_t TFT_Width = SETTINGS_TFT_WIDTH;     
-const int16_t TFT_Height = SETTINGS_TFT_HEIGHT;   
+//const int16_t TFT_Width = SETTINGS_TFT_WIDTH;
+//const int16_t TFT_Height = SETTINGS_TFT_HEIGHT;
 
-TFT_eSPI showPanel = TFT_eSPI(TFT_Width, TFT_Height);
+//TFT_eSPI showPanel = TFT_eSPI(TFT_Width, TFT_Height);
+TFT_eSPI showPanel = TFT_eSPI(SETTINGS_TFT_WIDTH, SETTINGS_TFT_HEIGHT);
 
 #define LCD_BACKLIGHT PIN_POWER_ON
 
@@ -76,21 +78,36 @@ void clearTFTDisplay() {
   virtualWindow->clear();
 }
 
-void sendOutput(String msg, bool addNewLine, bool toSerial, bool toTFTDispaly) {
+enum addNewLine {
+  addNewLineYes,
+  addNewLineNo,
+};
 
-  if (addNewLine)
+enum sendToSerial {
+  sendToSerialYes,
+  sendToSerialNo,
+};
+
+enum sendToTFTDisplay {
+  sendToTFTDisplayYes,
+  sendToTFTDisplayNo,
+};
+
+void sendOutput(String msg, addNewLine addNL = addNewLineYes, sendToSerial toSerial = sendToSerialYes, sendToTFTDisplay toTFTDisplay = sendToTFTDisplayYes) {
+
+  if (addNL == addNewLineYes)
     msg.concat("\r\n");
 
-  if (toSerial)
+  if (toSerial == sendToSerialYes)
     Serial.print(msg);
 
-  if (toTFTDispaly)
+  if (toTFTDisplay == sendToTFTDisplayYes)
     virtualWindow->print(msg);
 }
 
 void connectToWiFi() {
 
-  sendOutput("Connecting to " + String(WiFi_SSID) + " ", false, true, true);
+  sendOutput("Connecting to " + String(WiFi_SSID) + " ", addNewLineNo);
 
   WiFi.begin(WiFi_SSID, WiFi_Password);
 
@@ -99,22 +116,22 @@ void connectToWiFi() {
 
   while (WiFi.status() != WL_CONNECTED && millis() - startAttemptTime < wifiTimeout) {
     delay(500);
-    sendOutput(".", false, true, true);
+    sendOutput(".", addNewLineNo);
   }
 
   if (WiFi.status() == WL_CONNECTED) {
 
-    sendOutput("", true, true, true);
-    sendOutput("Connected", true, true, true);
-    sendOutput("IP address: " + WiFi.localIP().toString(), true, true, true);
-    sendOutput("", true, true, true);
+    sendOutput("");
+    sendOutput("Connected");
+    sendOutput("IP address: " + WiFi.localIP().toString());
+    sendOutput("");
 
   } else {
 
-    sendOutput("\nFailed to connect to WiFi. Retrying...", true, true, true);
-    delay(5000);          // Wait for 5 seconds before retrying
+    sendOutput("\nFailed to connect to WiFi. Retrying...");
+    delay(5000);  // Wait for 5 seconds before retrying
     clearTFTDisplay();
-    connectToWiFi();      // Retry connection
+    connectToWiFi();  // Retry connection
   }
 }
 
@@ -135,7 +152,7 @@ String getEndpointID() {
     if (httpResponseCode > 0) {
 
       String payload = http.getString();
-      sendOutput(payload, true, true, false);
+      sendOutput(payload, addNewLineYes, sendToSerialYes, sendToTFTDisplayNo);
 
       DynamicJsonDocument doc(2048);
       deserializeJson(doc, payload);
@@ -147,26 +164,26 @@ String getEndpointID() {
         if (endpoints.size() > 0) {
 
           returnValue = String(endpoints[0]["Id"].as<int>());
-          sendOutput("Endpoint ID: " + returnValue, true, true, false);
+          sendOutput("Endpoint ID: " + returnValue, addNewLineYes, sendToSerialYes, sendToTFTDisplayNo);
 
         } else {
 
-          sendOutput("No endpoints found.", true, true, true);
+          sendOutput("No endpoints found.");
         }
 
       } else {
 
-        sendOutput("Failed to parse endpoints response.", true, true, true);
+        sendOutput("Failed to parse endpoints response.");
       }
     } else {
 
-      sendOutput("Error on HTTP request: ", false, true, true);
-      sendOutput(String(httpResponseCode), true, true, true);
+      sendOutput("Error on HTTP request: ", addNewLineNo);
+      sendOutput(String(httpResponseCode));
     }
 
     http.end();
   } else {
-    sendOutput("WiFi Disconnected", true, true, true);
+    sendOutput("WiFi Disconnected");
   }
 
   return returnValue;
@@ -210,7 +227,7 @@ void showStatusOfAllContainers() {
     if (httpResponseCode > 0) {
       String payload = http.getString();
 
-      sendOutput((payload), true, true, false);
+      sendOutput((payload), addNewLineYes, sendToSerialYes, sendToTFTDisplayNo);
 
       DynamicJsonDocument doc(2048);
       deserializeJson(doc, payload);
@@ -219,17 +236,17 @@ void showStatusOfAllContainers() {
       if (doc.containsKey("message")) {
 
         virtualWindow->setColors(TFT_RED, TFT_BLACK);
-        sendOutput("Error:", true, true, true);
-        sendOutput(String(doc["message"].as<const char*>()), true, true, true);
-        sendOutput("", true, true, true);
-        sendOutput("Details:", true, true, true);
-        sendOutput(String(+doc["details"].as<const char*>()), true, true, true);
-        sendOutput("", true, true, true);
-        sendOutput("Please check you have the correct value for", true, true, true);
-        sendOutput("", true, true, true);
-        sendOutput("SETTINGS_PORTAINER_ENDPOINT_ID", true, true, true);
-        sendOutput("", true, true, true);
-        sendOutput("set in the user_settings.h file.", true, true, true);
+        sendOutput("Error:");
+        sendOutput(String(doc["message"].as<const char*>()));
+        sendOutput("");
+        sendOutput("Details:");
+        sendOutput(String(+doc["details"].as<const char*>()));
+        sendOutput("");
+        sendOutput("Please check you have the correct value for");
+        sendOutput("");
+        sendOutput("SETTINGS_PORTAINER_ENDPOINT_ID");
+        sendOutput("");
+        sendOutput("set in the user_settings.h file.");
 
         holdHereForeverAndEver();
 
@@ -265,12 +282,12 @@ void showStatusOfAllContainers() {
             state = ContainerState::UNDEFINED;
 
           currentListOfContainers.push_back({ nameWithoutSlash, state });
-          //containers.push_back({ "123456789112345678921234567893123456789412345678951234567896123", state });
+          //containers.push_back({ "123456789112345678921234567893123456789412345678951234567896123", state });  // the max length of a container name is 63 characters; used for testing
         };
 
         // if the list of containers and their statuses have not changed there is no need to refresh the display so we can have an early out
 
-        bool allConatainersAndTheirStatusesRemainUnchanged = std::equal(
+        bool allContainersAndTheirStatusesRemainUnchanged = std::equal(
           priorListOfContainers.begin(),
           priorListOfContainers.end(),
           currentListOfContainers.begin(),
@@ -278,8 +295,8 @@ void showStatusOfAllContainers() {
             return a.name == b.name && a.state == b.state;
           });
 
-        if (allConatainersAndTheirStatusesRemainUnchanged) {
-          sendOutput("All containers and thier statuses remained the same - no need to update the display", true, true, false);
+        if (allContainersAndTheirStatusesRemainUnchanged) {
+          sendOutput("All containers and their statuses remained the same - no need to update the display", addNewLineYes, sendToSerialYes, sendToTFTDisplayNo);
           return;
         };
 
@@ -298,8 +315,8 @@ void showStatusOfAllContainers() {
 
         virtualWindow->setColors(TFT_LIGHTGREY, TFT_BLACK);
 
-        sendOutput("Portainer containers by state", true, true, true);
-        sendOutput("---------------------------------------------------------------", true, true, true);
+        sendOutput("Portainer containers by state");
+        sendOutput("---------------------------------------------------------------");
 
         // Display the container information
 
@@ -329,23 +346,23 @@ void showStatusOfAllContainers() {
             else
               virtualWindow->setColors(TFT_RED, TFT_BLACK);
 
-            sendOutput("", true, true, true);
-            sendOutput(stateStr, true, true, true);
+            sendOutput("");
+            sendOutput(stateStr);
           };
 
-          sendOutput(container.name, true, true, true);
+          sendOutput(container.name);
         }
       }
     } else {
 
-      sendOutput("Error on HTTP request: " + String(httpResponseCode), true, true, true);
+      sendOutput("Error on HTTP request: " + String(httpResponseCode));
 
       if (httpResponseCode == -1) {
-        sendOutput("Connection refused. Please check the server URL and ensure the server is running.", true, true, true);
+        sendOutput("Connection refused. Please check the server URL and ensure the server is running.");
       } else if (httpResponseCode == 401) {
-        sendOutput("Unauthorized. Please check your API key.", true, true, true);
+        sendOutput("Unauthorized. Please check your API key.");
       } else if (httpResponseCode == 404) {
-        sendOutput("Not found. Please check the endpoint URL.", true, true, true);
+        sendOutput("Not found. Please check the endpoint URL.");
       };
 
       holdHereForeverAndEver();
@@ -393,12 +410,12 @@ void setup() {
 
     if (endpointID.length() > 0) {
 
-      sendOutput("Endpoint ID found, value is: " + endpointID, true, true, true);
+      sendOutput("Endpoint ID found, value is: " + endpointID);
 
     } else {
 
-      sendOutput("Failed to retrieve endpoint ID." + endpointID, true, true, true);
-      sendOutput("Program will not proceed." + endpointID, true, true, true);
+      sendOutput("Failed to retrieve endpoint ID." + endpointID);
+      sendOutput("Program will not proceed." + endpointID);
 
       holdHereForeverAndEver();
     };

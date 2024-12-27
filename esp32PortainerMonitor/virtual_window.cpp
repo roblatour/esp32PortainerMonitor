@@ -42,7 +42,8 @@ void VirtualWindow::render() {
 
   int16_t y = 0;
 
-  for (int i = verticalScrollPosition; i < min(verticalScrollPosition + visibleRows, (int)buffer.size()); i++) {
+  int16_t limit = min(verticalScrollPosition + visibleRows, (int)buffer.size());
+  for (int i = verticalScrollPosition; i < limit; i++) {
     display->setTextColor(buffer[i].textColor, buffer[i].backgroundColor);
     display->drawString(buffer[i].text.substring(horizontalScrollPosition, horizontalScrollPosition + visibleColumns), 0, y);
     y += lineHeight;
@@ -58,25 +59,26 @@ void VirtualWindow::renderLine(int index) {
 }
 
 void VirtualWindow::print(const String& text) {
-  String remaining = text;
-  while (remaining.length() > 0) {
-    int newlinePos = remaining.indexOf('\n');
-    if (newlinePos >= 0) {
-      currentLine += remaining.substring(0, newlinePos);
+  for (char c : text) {
+    if (c == '\r') {
+      // Ignore carriage return
+      continue;
+    } else if (c == '\n') {
+      // New line character
       buffer.push_back(LineAttributes(currentLine, currentTextColor, currentBackgroundColor));
       currentLine = "";
-      remaining = remaining.substring(newlinePos + 1);
+      renderLine(buffer.size() - 1);
     } else {
-      currentLine += remaining;
-      remaining = "";
-    }
-
-    while (buffer.size() > maxRows) {
-      buffer.erase(buffer.begin());
-      if (verticalScrollPosition > 0) verticalScrollPosition--;
+      // Print character immediately
+      display->drawChar(c, currentLine.length() * 6, buffer.size() * lineHeight, 1);
+      currentLine += c;
     }
   }
-  renderLine(buffer.size() - 1);   
+
+  while (buffer.size() > maxRows) {
+    buffer.erase(buffer.begin());
+    if (verticalScrollPosition > 0) verticalScrollPosition--;
+  }
 }
 
 void VirtualWindow::println(const String& text) {
