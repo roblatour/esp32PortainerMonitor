@@ -2,12 +2,17 @@
 
 ESP32 Portainer Monitor: 
 
- - is an Arduino sketch that allows you to display on a TFT display the status of all your containers being managed by Portainer
+ - an Arduino sketch to monitor Portainer containers on an inexpensive TFT touch Display
 
- 
+ ![photo](https://github.com/user-attachments/assets/4be64526-5373-453e-8021-079206fb6a89)
 
+ - automatically sorts containers by their status and name
+ - as needed touch the display to scroll up, down, left or right
 
-## Support Push2Run
+## Hardware
+- this ![ESP32 touch display]()
+
+## ESP32 Portainer Monitor
 
  To help support Push2Run, or to just say thanks, you're welcome to 'buy me a coffee'<br><br>
 [<img alt="buy me  a coffee" width="200px" src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" />](https://www.buymeacoffee.com/roblatour)
