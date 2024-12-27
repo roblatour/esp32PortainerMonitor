@@ -9,7 +9,7 @@
  - user defined refresh rate
    
 ## The open source code provides an example of how to:
- - access Portiainer info via the Portainer API
+ - access Portainer info via the Portainer API
  - write to a virtual window which is scrollable on a touch TFT display
 
 ## Hardware
