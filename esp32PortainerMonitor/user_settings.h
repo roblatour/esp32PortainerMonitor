@@ -10,13 +10,13 @@
                                                                //    look in the Serial Monitor output from the first run for the line that reads:
                                                                //        Endpoint ID found, value is: n  
                                                                //        (where n is a number, for example: 2)
-                                                               //    you can then replace the "" above with the number displayed in the Serial Montior output,
+                                                               //    you can then replace the "" above with the number displayed in the Serial Monitor output,
                                                                //    for example "2"
 
 #define SETTINGS_TFT_WIDTH                      240            // TFT Width in pixels
 #define SETTINGS_TFT_HEIGHT                     320            // TFT Height in pixels
 
-#define SETTINGS_MAX_BUFFER_ROWS                200            // max rows in the virutal window
-#define SETTINGS_MAX_BUFFER_COLUMNS              64            // max columns in the virutal window
+#define SETTINGS_MAX_BUFFER_ROWS                200            // max rows in the virtual window
+#define SETTINGS_MAX_BUFFER_COLUMNS              64            // max columns in the virtual window
 
 #define SETTINGS_REFRESH_RATE_IN_SECONDS         60            // refresh rate in seconds

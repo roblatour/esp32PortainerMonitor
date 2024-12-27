@@ -8,6 +8,7 @@
 // Compile and upload using Arduino IDE (2.3.4 or greater)
 //
 // Physical board:                        ESP32 with built in 2.8 inch TFT display ( ESP32-2432S028R ) - https://www.aliexpress.com/item/1005004502250619.html
+// Board Manager:                         ESP32 by Espressif Systems board library v2.0.13 (Note: the latest version of the esp32 board library may not work with this program / the above board)
 // Board in Arduino board manager:        ESP32 Dev Module
 //
 // Arduino Tools settings:
