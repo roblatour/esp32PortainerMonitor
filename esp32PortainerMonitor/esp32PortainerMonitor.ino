@@ -37,7 +37,7 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 
-#include <TFT_eSPI.h>              // downloaded from: http://pan.jczn1688.com/directlink/1/ESP32%20module/2.8inch_ESP32-2432S028R.rar
+#include <TFT_eSPI.h>              // download from: http://pan.jczn1688.com/directlink/1/ESP32%20module/2.8inch_ESP32-2432S028R.rar
 
 #include "pin_config.h"         
 #include "virtual_window.h"
