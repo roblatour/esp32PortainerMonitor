@@ -8,7 +8,7 @@
  - information on the display may be scroll up, down, left, or right as needed
  - user defined refresh rate
    
-## the open source code provides an example of how to:
+## The open source code provides an example of how to:
  - access Portiainer info via the Portainer API
  - write to a virtual window which is scrollable on a touch TFT display
 
