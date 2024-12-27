@@ -1,6 +1,6 @@
 # ESP32 Portainer Monitor
 
- - an Arduino sketch to monitor Portainer containers on an inexpensive TFT touch Display
+ An Arduino sketch to monitor Portainer containers on an inexpensive TFT touch Display
 
  ![photo](https://github.com/user-attachments/assets/4be64526-5373-453e-8021-079206fb6a89)
 
