@@ -58,8 +58,8 @@ const char* portainerAccessToken = SECRET_PORTAINER_ACCESS_TOKEN;
 
 String endpointID = "";
 
-const int16_t TFT_Width = SETTINGS_TFT_WIDTH;    // TFT Width in pixels
-const int16_t TFT_Height = SETTINGS_TFT_HEIGHT;  // TFT Height in pixels
+const int16_t TFT_Width = SETTINGS_TFT_WIDTH;     
+const int16_t TFT_Height = SETTINGS_TFT_HEIGHT;   
 
 TFT_eSPI showPanel = TFT_eSPI(TFT_Width, TFT_Height);
 
