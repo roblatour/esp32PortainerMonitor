@@ -2,7 +2,7 @@
 
  An Arduino sketch to monitor Portainer containers on an inexpensive TFT touch Display
 
- ![photo](https://github.com/user-attachments/assets/4be64526-5373-453e-8021-079206fb6a89)
+ ![photo](https://github.com/user-attachments/assets/c0ef3cf1-baad-4e31-8443-2d3da1517130)
 
  - automatically sorts and displays containers by their status and name
  - information on the display may be scroll up, down, left, or right as needed
