@@ -48,7 +48,6 @@ BB_SPI_LCD touchPanel;
 
 #include "user_secrets.h"
 #include "user_settings.h"
-//#include "helperClasses.h"
 
 const char* WiFi_SSID = SECRET_WIFI_SSID;
 const char* WiFi_Password = SECRET_WIFI_PASSWORD;
@@ -60,10 +59,6 @@ const char* portainerAccessToken = SECRET_PORTAINER_ACCESS_TOKEN;
 
 String endpointID = "";
 
-//const int16_t TFT_Width = SETTINGS_TFT_WIDTH;
-//const int16_t TFT_Height = SETTINGS_TFT_HEIGHT;
-
-//TFT_eSPI showPanel = TFT_eSPI(TFT_Width, TFT_Height);
 TFT_eSPI showPanel = TFT_eSPI(SETTINGS_TFT_WIDTH, SETTINGS_TFT_HEIGHT);
 
 #define LCD_BACKLIGHT PIN_POWER_ON
@@ -232,8 +227,7 @@ void showStatusOfAllContainers() {
 
       DynamicJsonDocument doc(2048);
       deserializeJson(doc, payload);
-
-      // Check if the response contains an error message
+    
       if (doc.containsKey("message")) {
 
         virtualWindow->setColors(TFT_RED, TFT_BLACK);
@@ -394,7 +388,6 @@ void setupDisplay() {
 
   virtualWindow->setColors(TFT_GREEN, TFT_BLACK);
 }
-
 
 void setup() {
 
