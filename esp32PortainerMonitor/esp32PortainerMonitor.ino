@@ -92,7 +92,7 @@ enum sendToTFTDisplay {
 void sendOutput(String msg, addNewLine addNL = addNewLineYes, sendToSerial toSerial = sendToSerialYes, sendToTFTDisplay toTFTDisplay = sendToTFTDisplayYes) {
 
   if (addNL == addNewLineYes)
-    msg.concat("\r\n");
+    msg.concat("\n");
 
   if (toSerial == sendToSerialYes)
     Serial.print(msg);
